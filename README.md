@@ -7,17 +7,17 @@ The unique feature and biggest challenge of the project is **"Pure NumPy Impleme
 ---
 ## 📖 Table of Contents
 
-- [Introduction](#-introduction)
-- [Dataset](#-dataset)
-- [Method](#-Method)
-- [Installation & Setup](#-installation--setup)
-- [How to Run](#-how-to-run)
-- [Results](#-results)
-- [Project Structure](#-project-structure)
-- [Challenges & Solutions](#-challenges_solutions)
-- [Future Improvements](#-Future_improvements)
-- [Credits](#-credits)
-- [License](#-license)
+- [Introduction](##introduction)
+- [Dataset](##dataset)
+- [Method](##method)
+- [Installation & Setup](##installation--setup)
+- [How to Run](##how-to-run)
+- [Results](##results)
+- [Project Structure](##project-structure)
+- [Challenges & Solutions](##challenges--solutions)
+- [Future Improvements](##future--improvements)
+- [Credits](##credits)
+- [License](##license)
 
 ---
 
