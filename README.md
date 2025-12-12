@@ -126,10 +126,15 @@ To get the project running locally, follow these steps:
 1.  **Clone the repository**
     ```sh
     git clone https://github.com/hnhan2005/Lab02_HR_Analysis.git
+    cd .\Lab02_HR_Analysis\
     ```
 2.  **Install the required dependencies**
     ```sh
     pip install -r requirements.txt
+    ```
+2.  **Open source code**
+    ```sh
+    code . 
     ```
 ---
 
