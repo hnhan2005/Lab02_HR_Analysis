@@ -93,7 +93,7 @@ The `Logistic Regression` model is built in Object Oriented Architecture (OOP) w
     - **Weighted Loss Function** instead of using the standard Binary Cross-Entropy, I use a weighted version to penalize wrong predictions on the minority class (`Target=1`) more heavily.Formula:$$J(w) = - \frac{1}{m} \sum_{i=1}^{m} \alpha^{(i)} [y^{(i)} \log(\hat{y}^{(i)}) + (1-y^{(i)}) \log(1-\hat{y}^{(i)})]$$
 
 - **Optimizer**:
-    - Use **Gradient Descent** to update weight `$w$` and bias `$b$`
+    - Use **Gradient Descent** to update weight $w$ and bias $b$
     - **Vectorization**: The entire prediction (Forward) and derivative (Backward) calculation process is done by matrix multiplication
     - **Forward Pass**: Calculate the prediction $\hat{y} = \sigma(X \cdot w + b)$
     - **Backward Pass** (Weighted Gradient): Calculate the derivative of the loss function taking into account the sample weights:$$\frac{\partial J}{\partial w} = \frac{1}{m} X^T (\mathbf{\alpha} \odot (\hat{y} - y))$$
@@ -156,10 +156,10 @@ The model is optimized according to the **F1-Score** index to solve the problem 
 
 | Metric | Score | Ý nghĩa |
 | :--- | :--- | :--- |
-| **Accuracy** | **[0.7289]** | Overall accuracy. |
-| **Precision** | **[0.4705]** | Of those predicted to leave, nearly [47]]% actually leave.. |
-| **Recall** | **[0.7484]** | The model found that nearly [75]% of people actually wanted to quit. |
-| **F1-Score** | **[0.5778]** | The Balance Between Precision and Recall. |
+| **Accuracy** | **[0.7463]** | Overall accuracy. |
+| **Precision** | **[0.4926]** | Of those predicted to leave, nearly [47]% actually leave.. |
+| **Recall** | **[0.7663]** | The model found that nearly [75]% of people actually wanted to quit. |
+| **F1-Score** | **[0.5997]** | The Balance Between Precision and Recall. |
 
 > **Comment:** Although Accuracy is high, we focus on **Recall** to minimize missing out on departing talent.
 
@@ -167,8 +167,8 @@ The model is optimized according to the **F1-Score** index to solve the problem 
 
 ![Confusion Matrix](/notebooks/confusion_matrix.png)
 
-* **True Positives:** Successfully detected **[711]** employees intending to quit.
-* **False Negatives:** No **[239]** employees detected.
+* **True Positives:** Successfully detected **[728]** employees intending to quit.
+* **False Negatives:** No **[222]** employees detected.
 
 ### Top Feature Importance 
 Based on the weights ($w$) of Logistic Regression, we find out the most influential factors:
