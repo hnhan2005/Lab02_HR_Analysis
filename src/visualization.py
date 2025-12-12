@@ -172,3 +172,157 @@ def plot_correlation_heatmap(X_matrix, y_vector, feature_names_list):
     plt.yticks(rotation=0)
     plt.tight_layout()
     plt.show()
+
+def plot_most_city(data):
+    candidates = data[data['target'] == 1]
+
+    unique_cities, counts = np.unique(candidates['city'], return_counts=True)
+
+    sorted_indices = np.argsort(counts)[::-1]
+
+    top_5_indices = sorted_indices[:5]
+
+    top_cities = unique_cities[top_5_indices]
+    top_counts = counts[top_5_indices]
+
+    plt.figure(figsize=(6, 4))
+    sns.barplot(x=top_counts, y=top_cities, hue=top_cities, legend=False, palette='viridis')
+
+    plt.title('Top 5 Cities with the Most Potential Candidates (Target=1)', fontsize=14, fontweight='bold', color='red')
+    plt.xlabel('Candidates')
+    plt.ylabel('City')
+
+    for i, v in enumerate(top_counts):
+        plt.text(v, i, f' {v}', va='center')
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_STEM_vs_nonSTEM(data):
+    is_stem = data['major_discipline'] == 'STEM'
+
+    stem_group = data['target'][is_stem]
+
+    non_stem_group = data['target'][~is_stem]
+
+    stem_rate = np.mean(stem_group) * 100
+    non_stem_rate = np.mean(non_stem_group) * 100
+
+    categories = ['STEM', 'Non-STEM']
+    values = [stem_rate, non_stem_rate]
+
+    plt.figure(figsize=(6, 4))
+
+    ax = sns.barplot(x=categories, y=values, hue=values, legend=False, palette=['#3498db', '#e74c3c'])
+
+    plt.title('Conversion Rate\nbetween STEM and Non-STEM', fontsize=14, fontweight='bold', color='red')
+    plt.ylabel('Percentage of Potential Candidates (%)')
+    plt.xlabel('Group')
+    plt.ylim(0, 100) 
+
+    for i, v in enumerate(values):
+        ax.text(i, v + 2, f'{v:.1f}%', ha='center', fontsize=10)
+
+    avg_total = np.mean(data['target']) * 100
+    plt.axhline(avg_total, color='gray', linestyle='--', label=f'Overall Average ({avg_total:.1f}%)')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_most_characteristic(data):
+    features_to_scan = [
+        'gender', 'relevent_experience', 'enrolled_university', 
+        'education_level', 'major_discipline', 'experience', 
+        'company_size', 'company_type', 'last_new_job'
+    ]
+
+    all_categories = []
+
+    for col in features_to_scan:
+        unique_vals = np.unique(data[col])
+        
+        for val in unique_vals:
+            if str(val) == 'nan' or str(val) == '': continue
+
+            mask = data[col] == val
+            targets_in_group = data['target'][mask]
+            
+            if len(targets_in_group) > 20: 
+                rate = np.mean(targets_in_group) * 100
+                
+                val_str = str(val)
+                if isinstance(val, bytes):
+                    val_str = val.decode('utf-8')
+                
+                display_name = f"{col}: {val_str}"
+                
+                all_categories.append((display_name, rate))
+
+    result_arr = np.array(all_categories, dtype=[('name', 'U50'), ('rate', 'f4')])
+
+    sorted_indices = np.argsort(result_arr['rate'])[::-1]
+
+    top_7 = result_arr[sorted_indices][:7]
+
+    plt.figure(figsize=(10, 4))
+    
+    ax = sns.barplot(x=top_7['rate'], y=top_7['name'], palette='deep', hue=top_7['name'], legend=False, dodge=False)
+
+    plt.title('Top 7 Employee Characteristics with the Most Potential Candidates', fontsize=14, fontweight='bold', color='red')
+    plt.xlabel('Percentage of Potential Candidates (%)', fontsize=12)
+    plt.ylabel('Employee Characteristics', fontsize=12)
+
+    for i, v in enumerate(top_7['rate']):
+        ax.text(v + 0.5, i, f'{v:.1f}%', va='center')
+
+    avg_rate = np.mean(data['target']) * 100
+    plt.axvline(x=avg_rate, color='red', linestyle='--', linewidth=1.5)
+    plt.text(avg_rate, len(top_7)-0.5, f' Average: {avg_rate:.1f}%', color='red', va='bottom', fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_compare_education_value(data):
+    mask_low = data['city_development_index'] < 0.7
+    mask_high = data['city_development_index'] >= 0.7
+    
+    unique_levels = np.unique(data['education_level'])
+    
+    comparison_data = []
+
+    for level in unique_levels:
+        level_str = str(level)
+        if isinstance(level, bytes):
+            level_str = level.decode('utf-8')
+        if level_str == 'nan' or level_str == '': continue
+        
+        mask_level_low = (data['education_level'] == level) & mask_low
+        targets_low = data['target'][mask_level_low]
+        rate_low = np.mean(targets_low) * 100 if len(targets_low) > 10 else 0
+            
+        mask_level_high = (data['education_level'] == level) & mask_high
+        targets_high = data['target'][mask_level_high]
+        rate_high = np.mean(targets_high) * 100 if len(targets_high) > 10 else 0
+            
+        comparison_data.append((level_str, rate_low, 'Low CDI'))
+        comparison_data.append((level_str, rate_high, 'High CDI'))
+
+    plot_data = np.array(comparison_data, dtype=[('level', 'U50'), ('rate', 'f4'), ('city_type', 'U50')])
+
+    plt.figure(figsize=(11, 6))
+    
+    ax = sns.barplot(
+        x=plot_data['level'], y=plot_data['rate'], hue=plot_data['city_type'], palette={'Low CDI': '#e74c3c', 'High CDI': '#2c3e50'})
+
+    plt.title('Potential Candidates by Education Level and City Development Index', fontsize=14, fontweight='bold', color='red')
+    plt.ylabel('Percentage of Potential Candidates (%)', fontsize=12)
+    plt.xlabel('Education Level', fontsize=12)
+    plt.legend(title='City Type')
+
+    for container in ax.containers:
+        ax.bar_label(container, fmt='%.1f%%', padding=3, fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+

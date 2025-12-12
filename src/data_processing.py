@@ -201,14 +201,28 @@ def encode_one_hot(data, col_name):
 # SCALING & OUTLIER REMOVAL
 # ==========================================
 
-def remove_outliers_zscore(X, y, threshold=3.0):
-    mean = np.mean(X, axis=0)
-    std = np.std(X, axis=0)
-    std[std == 0] = 1.0 
+# def remove_outliers_zscore(X, y, feature_idx = 1, threshold=3.0):
+#     mean = np.mean(X, axis=0)
+#     std = np.std(X, axis=0)
+#     std[std == 0] = 1.0 
     
-    z_scores = np.abs((X - mean) / std)
+#     z_scores = np.abs((X - mean) / std)
     
-    mask = np.all(z_scores < threshold, axis=1)
+#     mask = np.all(z_scores < threshold, axis=1)
+    
+#     return X[mask], y[mask]
+
+def remove_outliers_zscore(X, y, feature_index=1, threshold=3.0):
+    feature_data = X[:, feature_index]
+    mean = np.mean(feature_data)
+    std = np.std(feature_data)
+    
+    if std == 0:
+        std = 1.0 
+    
+    z_scores = np.abs((feature_data - mean) / std)
+    
+    mask = z_scores < threshold
     
     return X[mask], y[mask]
 
